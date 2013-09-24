@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 Ervilha README 
 
-Ervilha aims to be an openjdk instrumentation and profiling tool 
-=======
 Ervilha aims to be a jvm monitoring tool.
->>>>>>> 48b0137c6623db1e81b4c4af5b3994f4d0db6f8e
+
