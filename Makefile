@@ -1,4 +1,4 @@
-
+DIRS = src tests
 debug: jvmAgent.so Hello.class
 	java -agentpath:./jvmAgent.so Hello
 run: Hello.class

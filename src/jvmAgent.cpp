@@ -14,14 +14,13 @@ CjvmAgent::CjvmAgent()
     return;
 }
 
-/*Lista de metodos */
+/*Methods list */
 std::map<jmethodID, MethodInfo *> methodsList;
 
-//Variaveis Globais
 static int port = 8282; //FIXME: Isso aqui deveria vir no arquivo de configuracao
 
 void parse_options(char *opt) {
-    printf("Fazendo parsing dos parametros\n");
+    printf("Parsing parameters list\n");
 
     //TODO: Usar o strtoken ou a biblioteca getopt para fazer o parsing
 }
@@ -29,7 +28,7 @@ void parse_options(char *opt) {
 JNIEXPORT jint JNICALL
 Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
 {
-    printf("Agente carregado com sucesso\n");
+    printf("Agent loaded successfully\n");
 
     jvmtiEnv *jvmti		= NULL;
     jvmtiError error	= JVMTI_ERROR_NONE;
@@ -39,7 +38,7 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
 
     res = vm->GetEnv((void **) &jvmti, JVMTI_VERSION_1_0);
     if (res != JNI_OK) {
-        printf("Erro ao criar ambiente jvmti\n");
+        printf("Error creating jvmti environment\n");
         return res;
     }
 
@@ -60,7 +59,7 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
     // Ativas as capabilities
     error = jvmti->AddCapabilities(&capabilities);
     if (error != JVMTI_ERROR_NONE) {
-        printf("Erro ao ativar capacidades\n");
+        printf("Error on capabilities activation\n");
         return error;
     }
 
@@ -76,7 +75,7 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
     callbacks.MethodExit	= &cbMethodExit;
     error = jvmti->SetEventCallbacks(&callbacks, (jint)sizeof(callbacks));
     if (error != JVMTI_ERROR_NONE) {
-        printf("Erro ao ativar callbacks\n");
+        printf("Error on callbacks activation\n");
         return error;
     }
 
@@ -98,14 +97,14 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
     error = jvmti->SetEventNotificationMode(JVMTI_ENABLE,
                                             JVMTI_EVENT_METHOD_EXIT, (jthread)NULL);
     if (error != JVMTI_ERROR_NONE) {
-        printf("Erro ao habilitar eventos\n");
+        printf("Error on events enabling\n");
         return error;
     }
 
     // cria um monitor para seções criticas.
     error = jvmti->CreateRawMonitor("agent data", &(agent_lock));
     if (error != JVMTI_ERROR_NONE) {
-        printf("Erro ao criar monitor\n");
+        printf("Error creating monitor\n");
         return error;
     }
     
@@ -121,7 +120,7 @@ Agent_OnUnLoad(JavaVM *vm)
     vm->GetEnv((void **) &jvmti, JVMTI_VERSION_1_0);
     
     //TODO: esse print nao eh chamado
-    printf("\nAgente descarregado\n");
+    printf("\nAgent unloaded\n");
 }
 
 /* --------------------------------------------------------------- */
@@ -204,7 +203,7 @@ static void JNICALL cbMethodExit(jvmtiEnv *jvmti, JNIEnv* env, jthread thread,
     error = error + jvmti->GetMethodDeclaringClass(method, &classe);
     error = error + jvmti->GetClassSignature(classe, &classname, NULL);
     if(error != JVMTI_ERROR_NONE){
-      printf("Error obtendo informacoes do metodo\n");
+      printf("Error gathering method information\n");
       return;
     } else {
       it->second->name = new string(name);

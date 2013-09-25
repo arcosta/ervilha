@@ -25,11 +25,11 @@ public:
     CjvmAgent(void);
 };
 
-/** Metodo chamado na carga do agente*/
+/** Method called on Agent load*/
 JNIEXPORT jint JNICALL
 Agent_OnLoad(JavaVM *vm, char *options, void *reserved);
 
-/** Metodo chamado na descarga do agente*/
+/** Method called on Agent unload*/
 JNIEXPORT void JNICALL
 Agent_OnUnLoad(JavaVM *vm);
 
